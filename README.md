@@ -87,5 +87,5 @@ cd Mechanical-Keyboard-Android
 ## 📄 License & Credits
 
 - **MechBoard** is free and open-source software licensed under the [GNU General Public License v3.0](LICENSE).
-- Based on [HeliBoard](https://github.com/HeliBorg/HeliBoard) / [OpenBoard](https://github.com/openboard-team/openboard) / [AOSP LatinIME](https://android.googlesource.com/platform/packages/inputmethods/LatinIME/).
+- Based on [HeliBoard](https://github.com/HeliBorg/HeliBoard).
 - Icons powered by [Lucide Icons](https://lucide.dev/) (ISC License).
