@@ -91,9 +91,14 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
                     val dictUri by dictUriFlow.collectAsState()
                     val crashReports by crashReportFiles.collectAsState()
                     val crashFilePicker = filePicker { saveCrashReports(it) }
+                    val isImeEnabled = UncachedInputMethodManagerUtils.isThisImeEnabled(this, imm)
+                    val isImeCurrent = UncachedInputMethodManagerUtils.isThisImeCurrent(this, imm)
+                    if (isImeEnabled && isImeCurrent) {
+                        prefs.edit().putBoolean("pref_welcome_wizard_completed", true).apply()
+                    }
+                    val wizardCompleted = prefs.getBoolean("pref_welcome_wizard_completed", false)
                     var showWelcomeWizard by rememberSaveable { mutableStateOf(
-                        !UncachedInputMethodManagerUtils.isThisImeCurrent(this, imm)
-                                || !UncachedInputMethodManagerUtils.isThisImeEnabled(this, imm)
+                        !isImeEnabled || (!isImeCurrent && !wizardCompleted)
                     ) }
                     if (spellchecker)
                         Scaffold(contentWindowInsets = WindowInsets.safeDrawing) { innerPadding ->
@@ -114,7 +119,16 @@ open class SettingsActivity : ComponentActivity(), SharedPreferences.OnSharedPre
                     else {
                         SettingsNavHost(onClickBack = { this.finish() })
                         if (showWelcomeWizard) {
-                            WelcomeWizard(close = { showWelcomeWizard = false }, finish = this::finish)
+                            WelcomeWizard(
+                                close = {
+                                    prefs.edit().putBoolean("pref_welcome_wizard_completed", true).apply()
+                                    showWelcomeWizard = false
+                                },
+                                finish = {
+                                    prefs.edit().putBoolean("pref_welcome_wizard_completed", true).apply()
+                                    showWelcomeWizard = false
+                                }
+                            )
                         } else if (crashReports.isNotEmpty()) {
                             val ctx = LocalContext.current
                             ConfirmationDialog(

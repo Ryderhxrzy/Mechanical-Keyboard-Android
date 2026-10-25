@@ -343,7 +343,25 @@ public class KeyboardView extends View {
                     mKeyBackground, mFunctionalKeyBackground, mSpacebarBackground, mActionKeyBackground);
             onDrawKeyBackground(key, canvas, background);
         }
-        onDrawKeyTopVisuals(key, canvas, paint, params);
+        final boolean isMech3d = helium314.keyboard.latin.utils.MechanicalKeycapRenderer.INSTANCE.shouldDrawMechanicalKey(getContext());
+        if (isMech3d) {
+            // keep every label / icon / hint strictly inside the keycap, whatever the key size or gap setting
+            final float density = getResources().getDisplayMetrics().density;
+            final float pressOffsetY = helium314.keyboard.latin.utils.MechanicalKeycapRenderer.INSTANCE.getLabelVerticalOffsetPx(key, density);
+            final float w = key.getDrawWidth();
+            final float h = key.getHeight();
+            final float inset = 1.5f * density;
+            canvas.save();
+            canvas.clipRect(inset, inset, w - inset, h - inset);
+            canvas.scale(0.9f, 0.9f, w / 2f, h * 0.46f);
+            if (pressOffsetY != 0f) {
+                canvas.translate(0, pressOffsetY);
+            }
+            onDrawKeyTopVisuals(key, canvas, paint, params);
+            canvas.restore();
+        } else {
+            onDrawKeyTopVisuals(key, canvas, paint, params);
+        }
 
         canvas.translate(-keyDrawX, -keyDrawY);
     }
@@ -351,6 +369,10 @@ public class KeyboardView extends View {
     // Draw key background.
     protected void onDrawKeyBackground(@NonNull final Key key, @NonNull final Canvas canvas,
             @NonNull final Drawable background) {
+        if (helium314.keyboard.latin.utils.MechanicalKeycapRenderer.INSTANCE.shouldDrawMechanicalKey(getContext())) {
+            helium314.keyboard.latin.utils.MechanicalKeycapRenderer.INSTANCE.draw3DKeycap(key, canvas, mColors, getContext());
+            return;
+        }
         final int keyWidth = key.getDrawWidth();
         final int keyHeight = key.getHeight();
         final int bgWidth, bgHeight, bgX, bgY;
@@ -538,6 +560,14 @@ public class KeyboardView extends View {
                 ? (int) (keyWidth * mSpacebarIconWidthRatio * mIconScaleFactor)
                 : (int) (Math.min(icon.getIntrinsicWidth(), keyWidth) * mIconScaleFactor);
             int iconHeight = (int) (icon.getIntrinsicHeight() * mIconScaleFactor);
+            if (key.getCode() != Constants.CODE_SPACE
+                    && helium314.keyboard.latin.utils.MechanicalKeycapRenderer.INSTANCE.shouldDrawMechanicalKey(getContext())
+                    && iconWidth > 0 && iconHeight > 0) {
+                // never let an icon be bigger than the keycap dish
+                final float fit = Math.min(1f, Math.min(keyWidth * 0.6f / iconWidth, keyHeight * 0.6f / iconHeight));
+                iconWidth = (int) (iconWidth * fit);
+                iconHeight = (int) (iconHeight * fit);
+            }
             int iconY = key.isAlignIconToBottom()
                 ? keyHeight - iconHeight
                 : (keyHeight - iconHeight) / 2; // Align vertically center.

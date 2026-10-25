@@ -59,12 +59,29 @@ fun SettingsNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = startDestination ?: SettingsDestination.Settings,
+        startDestination = startDestination ?: SettingsDestination.MainApp,
         enterTransition = { slideInHorizontally(initialOffsetX = { +it * dir }, animationSpec = animation) },
         exitTransition = { slideOutHorizontally(targetOffsetX = { -it * dir }, animationSpec = animation) },
         popEnterTransition = { slideInHorizontally(initialOffsetX = { -it * dir }, animationSpec = animation) },
         popExitTransition = { slideOutHorizontally(targetOffsetX = { +it * dir }, animationSpec = animation) }
     ) {
+        composable(SettingsDestination.MainApp) {
+            helium314.keyboard.settings.screens.MainAppScreen(
+                onClickAbout = { navController.navigate(SettingsDestination.About) },
+                onClickTextCorrection = { navController.navigate(SettingsDestination.TextCorrection) },
+                onClickPreferences = { navController.navigate(SettingsDestination.Preferences) },
+                onClickToolbar = { navController.navigate(SettingsDestination.Toolbar) },
+                onClickGestureTyping = { navController.navigate(SettingsDestination.GestureTyping) },
+                onClickDataGathering = { navController.navigate(SettingsDestination.DataGathering) },
+                onClickAdvanced = { navController.navigate(SettingsDestination.Advanced) },
+                onClickAppearance = { navController.navigate(SettingsDestination.Appearance) },
+                onClickLanguage = { navController.navigate(SettingsDestination.Languages) },
+                onClickLayouts = { navController.navigate(SettingsDestination.Layouts) },
+                onClickDictionaries = { navController.navigate(SettingsDestination.Dictionaries) },
+                onClickBack = ::goBack,
+                onClickMechanicalKeyboard = { navController.navigate(SettingsDestination.MechanicalKeyboard) },
+            )
+        }
         composable(SettingsDestination.Settings) {
             MainSettingsScreen(
                 onClickAbout = { navController.navigate(SettingsDestination.About) },
@@ -79,7 +96,11 @@ fun SettingsNavHost(
                 onClickLayouts = { navController.navigate(SettingsDestination.Layouts) },
                 onClickDictionaries = { navController.navigate(SettingsDestination.Dictionaries) },
                 onClickBack = ::goBack,
+                onClickMechanicalKeyboard = { navController.navigate(SettingsDestination.MechanicalKeyboard) },
             )
+        }
+        composable(SettingsDestination.MechanicalKeyboard) {
+            helium314.keyboard.settings.screens.MechanicalKeyboardScreen(onClickBack = ::goBack)
         }
         composable(SettingsDestination.About) {
             AboutScreen(onClickBack = ::goBack)
@@ -145,7 +166,9 @@ fun SettingsNavHost(
 }
 
 object SettingsDestination {
+    const val MainApp = "main_app"
     const val Settings = "settings"
+    const val MechanicalKeyboard = "mechanical_keyboard"
     const val About = "about"
     const val TextCorrection = "text_correction"
     const val Preferences = "preferences"

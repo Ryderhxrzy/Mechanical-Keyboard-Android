@@ -2048,6 +2048,7 @@ public final class InputLogic {
      */
     private void performEditorAction(final int actionId) {
         mConnection.performEditorAction(actionId);
+        KeyboardSwitcher.getInstance().resetKeyboardStateToAlphabet();
     }
 
     /**

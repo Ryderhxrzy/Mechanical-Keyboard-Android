@@ -43,6 +43,7 @@ fun MainSettingsScreen(
     onClickLayouts: () -> Unit,
     onClickDictionaries: () -> Unit,
     onClickBack: () -> Unit,
+    onClickMechanicalKeyboard: () -> Unit = {},
 ) {
     SearchSettingsScreen(
         onClickBack = onClickBack,
@@ -64,6 +65,12 @@ fun MainSettingsScreen(
                     name = stringResource(R.string.settings_screen_preferences),
                     onClick = onClickPreferences,
                     icon = R.drawable.ic_settings_preferences
+                ) { NextScreenIcon() }
+                Preference(
+                    name = "Mechanical Keyboard",
+                    description = "Switch sounds, custom keycap themes & spacing",
+                    onClick = onClickMechanicalKeyboard,
+                    icon = R.drawable.ic_lucide_keyboard
                 ) { NextScreenIcon() }
                 Preference(
                     name = stringResource(R.string.settings_screen_appearance),
@@ -124,7 +131,7 @@ private fun PreviewScreen() {
     initPreview(LocalContext.current)
     Theme(previewDark) {
         Surface {
-            MainSettingsScreen({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
+            MainSettingsScreen({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {})
         }
     }
 }

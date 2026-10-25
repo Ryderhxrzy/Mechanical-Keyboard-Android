@@ -49,6 +49,7 @@ public final class AudioAndHapticFeedbackManager {
     private void initInternal(final Context context) {
         mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        helium314.keyboard.latin.utils.MechanicalSoundManager.getInstance().init(context);
     }
 
     public void performHapticAndAudioFeedback(
@@ -79,14 +80,18 @@ public final class AudioAndHapticFeedbackManager {
     }
 
     public void performAudioFeedback(final int code, final HapticEvent hapticEvent) {
-        // if mAudioManager is null, we can't play a sound anyway, so return
-        if (mAudioManager == null) {
-            return;
-        }
-        if (!mSoundOn) {
-            return;
-        }
         if (hapticEvent != HapticEvent.KEY_PRESS) {
+            return;
+        }
+        final helium314.keyboard.latin.utils.MechanicalSoundManager mechSound =
+                helium314.keyboard.latin.utils.MechanicalSoundManager.getInstance();
+        if (mechSound.isReadyAndEnabled()) {
+            if (!mDoNotDisturb || mechSound.isPlayInSilentMode()) {
+                mechSound.playSwitchSound(code);
+                return;
+            }
+        }
+        if (mDoNotDisturb || mAudioManager == null || !mSoundOn) {
             return;
         }
         final int sound = switch (code) {

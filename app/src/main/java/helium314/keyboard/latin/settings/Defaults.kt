@@ -47,9 +47,9 @@ object Defaults {
     const val PREF_THEME_STYLE = KeyboardTheme.STYLE_MATERIAL
     fun PREF_ICON_STYLE(prefs: SharedPreferences) = prefs.getString(Settings.PREF_THEME_STYLE, PREF_THEME_STYLE)!!
     const val PREF_ACCENT_SHIFTED_ICON = false
-    const val PREF_THEME_COLORS = KeyboardTheme.THEME_LIGHT
-    const val PREF_THEME_COLORS_NIGHT = KeyboardTheme.THEME_DARK
-    const val PREF_THEME_KEY_BORDERS = false
+    const val PREF_THEME_COLORS = KeyboardTheme.THEME_MECH_AMBER
+    const val PREF_THEME_COLORS_NIGHT = KeyboardTheme.THEME_MECH_AMBER
+    const val PREF_THEME_KEY_BORDERS = true
     @JvmField
     val PREF_THEME_DAY_NIGHT = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
     const val PREF_CUSTOM_ICON_NAMES = ""
@@ -57,7 +57,7 @@ object Defaults {
     const val PREF_AUTO_CAP = true
     const val PREF_VIBRATE_ON = false
     const val PREF_VIBRATE_IN_DND_MODE = false
-    const val PREF_SOUND_ON = false
+    const val PREF_SOUND_ON = true
     const val PREF_SUGGEST_EMOJIS = true
     const val PREF_INLINE_EMOJI_SEARCH = true
     const val PREF_SHOW_EMOJI_DESCRIPTIONS = true

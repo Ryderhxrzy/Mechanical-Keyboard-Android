@@ -48,6 +48,49 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
         const val STYLE_HOLO = "Holo"
         const val STYLE_ROUNDED = "Rounded"
 
+        // mechanical keyboard themes
+        const val THEME_MECH_AMBER = "mech_amber"
+        const val THEME_MECH_RETRO = "mech_retro"
+        const val THEME_MECH_CYBERPUNK = "mech_cyberpunk"
+        const val THEME_MECH_MATCHA = "mech_matcha"
+        const val THEME_MECH_STEALTH = "mech_stealth"
+        const val THEME_MECH_OLIVIA = "mech_olivia"
+        const val THEME_MECH_DOLCH = "mech_dolch"
+        const val THEME_MECH_CUSTOM = "mech_custom"
+
+        const val PREF_MECH_THEME_MODE = "pref_mech_theme_mode" // "auto", "dark" or "light"
+        const val MECH_MODE_AUTO = "auto"
+        const val MECH_MODE_DARK = "dark"
+        const val MECH_MODE_LIGHT = "light"
+
+        class MechPalette(
+            val bgLight: String, val bgDark: String, val accent: String,
+            val key: String, val func: String, val space: String, val text: String, val hint: String
+        )
+
+        val MECH_PALETTES = mapOf(
+            THEME_MECH_AMBER to MechPalette("#E9E4DC", "#14171B", "#FF9E00", "#252C33", "#1E2429", "#2C353D", "#FFA000", "#CC7A00"),
+            THEME_MECH_RETRO to MechPalette("#D4CFBF", "#26251F", "#B22222", "#FDFCF7", "#B5B0A2", "#FDFCF7", "#212121", "#757575"),
+            THEME_MECH_CYBERPUNK to MechPalette("#E6DFF3", "#110D20", "#FF007F", "#1A162F", "#2D124D", "#2D124D", "#00F0FF", "#FF007F"),
+            THEME_MECH_MATCHA to MechPalette("#D9E3D2", "#1E2A1E", "#607D5A", "#F2F5EC", "#6B7F64", "#F2F5EC", "#243324", "#5A7056"),
+            THEME_MECH_STEALTH to MechPalette("#D9D9DC", "#121214", "#FF6F00", "#26262B", "#1A1A1E", "#26262B", "#F5F5F7", "#FF8F00"),
+            THEME_MECH_OLIVIA to MechPalette("#E8DED6", "#1C1A19", "#E8B4A6", "#FAF4EE", "#36312E", "#FAF4EE", "#2B2624", "#8C7A72"),
+            THEME_MECH_DOLCH to MechPalette("#D3D8DD", "#181B20", "#00B4D8", "#4A5058", "#2B2F36", "#4A5058", "#F0F4F8", "#00B4D8"),
+        )
+
+        /** keyboard background (not keycap) color of a mechanical theme, as ARGB int; null for other themes */
+        @JvmStatic
+        fun mechBackground(themeId: String, isNight: Boolean): Int? =
+            MECH_PALETTES[themeId]?.let { (if (isNight) it.bgDark else it.bgLight).toColorInt() }
+
+        @JvmStatic
+        fun isNightForMode(context: Context, prefs: SharedPreferences): Boolean =
+            when (prefs.getString(PREF_MECH_THEME_MODE, MECH_MODE_AUTO)) {
+                MECH_MODE_DARK -> true
+                MECH_MODE_LIGHT -> false
+                else -> ResourceUtils.isNight(context.resources) && prefs.getBoolean(Settings.PREF_THEME_DAY_NIGHT, Defaults.PREF_THEME_DAY_NIGHT)
+            }
+
         // new themes that are just colors
         const val THEME_LIGHT = "light"
         const val THEME_HOLO_WHITE = "holo_white"
@@ -66,6 +109,14 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
         const val THEME_SAND = "sand"
         const val THEME_VIOLETTE = "violette"
         fun getAvailableDefaultColors(prefs: SharedPreferences, isNight: Boolean) = listOfNotNull(
+            THEME_MECH_AMBER,
+            THEME_MECH_RETRO,
+            THEME_MECH_CYBERPUNK,
+            THEME_MECH_MATCHA,
+            THEME_MECH_STEALTH,
+            THEME_MECH_OLIVIA,
+            THEME_MECH_DOLCH,
+            THEME_MECH_CUSTOM,
             if (!isNight) THEME_LIGHT else null, THEME_DARK,
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) THEME_DYNAMIC else null,
             if (prefs.getString(Settings.PREF_THEME_STYLE, Defaults.PREF_THEME_STYLE) == STYLE_HOLO) THEME_HOLO_WHITE else null,
@@ -133,8 +184,7 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
         @JvmStatic
         fun getColorsForCurrentTheme(context: Context): Colors {
             val prefs = context.prefs()
-            val isNight = SettingsActivity.forceNight
-                ?: (ResourceUtils.isNight(context.resources) && prefs.getBoolean(Settings.PREF_THEME_DAY_NIGHT, Defaults.PREF_THEME_DAY_NIGHT))
+            val isNight = SettingsActivity.forceNight ?: isNightForMode(context, prefs)
             val themeName = SettingsActivity.forceTheme ?: if (isNight)
                 prefs.getString(Settings.PREF_THEME_COLORS_NIGHT, Defaults.PREF_THEME_COLORS_NIGHT)
             else
@@ -336,6 +386,43 @@ private constructor(val themeId: Int, @JvmField val mStyleId: Int) {
                     Color.WHITE,
                     keyboardBackground = backgroundImage
                 )
+                // Keycaps keep their colorway in light AND dark mode. Only the keyboard background changes.
+                THEME_MECH_AMBER, THEME_MECH_RETRO, THEME_MECH_CYBERPUNK, THEME_MECH_MATCHA,
+                THEME_MECH_STEALTH, THEME_MECH_OLIVIA, THEME_MECH_DOLCH -> {
+                    val p = MECH_PALETTES.getValue(themeName)
+                    DefaultColors(
+                        themeStyle,
+                        hasBorders,
+                        p.accent.toColorInt(),
+                        (if (isNight) p.bgDark else p.bgLight).toColorInt(),
+                        p.key.toColorInt(),
+                        p.func.toColorInt(),
+                        p.space.toColorInt(),
+                        p.text.toColorInt(),
+                        p.hint.toColorInt(),
+                        keyboardBackground = backgroundImage
+                    )
+                }
+                THEME_MECH_CUSTOM -> {
+                    val plate = prefs.getInt("pref_mech_custom_plate", "#181B1F".toColorInt())
+                    val alphas = prefs.getInt("pref_mech_custom_alphas", "#252C33".toColorInt())
+                    val mods = prefs.getInt("pref_mech_custom_mods", "#1E2429".toColorInt())
+                    val accent = prefs.getInt("pref_mech_custom_accent", "#FF9E00".toColorInt())
+                    val text = prefs.getInt("pref_mech_custom_text", "#FFA000".toColorInt())
+                    val hint = prefs.getInt("pref_mech_custom_hint", "#CC7A00".toColorInt())
+                    DefaultColors(
+                        themeStyle,
+                        hasBorders,
+                        accent,
+                        plate,
+                        alphas,
+                        mods,
+                        alphas,
+                        text,
+                        hint,
+                        keyboardBackground = backgroundImage
+                    )
+                }
                 else -> { // user-defined theme
                     val colorSettings = readUserColors(prefs, themeName)
                     val colors = readUserColorTheme(themeStyle, hasBorders, colorSettings, context, isNight, backgroundImage)

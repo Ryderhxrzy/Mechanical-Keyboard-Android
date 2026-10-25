@@ -77,6 +77,15 @@ SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-only
             </intent-filter>
         </activity>
 
+        <!-- quick settings with test field, opened from the settings icon of the keyboard -->
+        <activity android:name="helium314.keyboard.settings.MechQuickSettingsActivity"
+            android:theme="@style/platformActivityTheme"
+            android:icon="@mipmap/ic_launcher"
+            android:label="Quick Keyboard Settings"
+            android:excludeFromRecents="true"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:exported="false" />
+
         <activity android:name=".spellcheck.SpellCheckerSettingsActivity"
                 android:theme="@style/platformActivityTheme"
                 android:label="@string/spell_checker_service_name"

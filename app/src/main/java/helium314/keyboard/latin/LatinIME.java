@@ -1070,6 +1070,9 @@ public class LatinIME extends InputMethodService implements
         // not attempt recorrection. This is true even with a hardware keyboard connected: if the
         // view is not displayed we have no means of showing suggestions anyway, and if it is then
         // we want to show suggestions anyway.
+        if (newSelStart == 0 && newSelEnd == 0 && (oldSelStart > 0 || oldSelEnd > 0)) {
+            mKeyboardSwitcher.resetKeyboardStateToAlphabet();
+        }
         final SettingsValues settingsValues = mSettings.getCurrent();
         if (isInputViewShown()
                 && mInputLogic.onUpdateSelection(oldSelStart, oldSelEnd, newSelStart, newSelEnd,
@@ -1355,7 +1358,32 @@ public class LatinIME extends InputMethodService implements
     }
 
     public void displaySettingsDialog() {
-        launchSettings();
+        launchQuickSettings();
+    }
+
+    /** opens the quick settings (layout, theme, size, sound, ... with a test field) without going to the app */
+    public void launchQuickSettings() {
+        mInputLogic.commitTyped(mSettings.getCurrent(), LastComposedWord.NOT_A_SEPARATOR);
+        requestHideSelf(0);
+        final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        if (mainKeyboardView != null) {
+            mainKeyboardView.closing();
+        }
+        final Intent intent = new Intent();
+        intent.setClass(LatinIME.this, helium314.keyboard.settings.MechQuickSettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    public boolean showMechanicalQuickControlsDialog() {
+        if (isShowingOptionDialog()) return false;
+        final View mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();
+        if (mainKeyboardView == null) return false;
+        final android.os.IBinder windowToken = mainKeyboardView.getWindowToken();
+        if (windowToken == null) return false;
+        mOptionsDialog = helium314.keyboard.latin.utils.MechanicalQuickControlsDialogKt.createMechanicalQuickControlsDialog(this, windowToken);
+        mOptionsDialog.show();
+        return true;
     }
 
     public boolean showInputPickerDialog() {
@@ -1715,7 +1743,7 @@ public class LatinIME extends InputMethodService implements
         return mClipboardHistoryManager;
     }
 
-    void launchSettings() {
+    public void launchSettings() {
         mInputLogic.commitTyped(mSettings.getCurrent(), LastComposedWord.NOT_A_SEPARATOR);
         requestHideSelf(0);
         final MainKeyboardView mainKeyboardView = mKeyboardSwitcher.getMainKeyboardView();

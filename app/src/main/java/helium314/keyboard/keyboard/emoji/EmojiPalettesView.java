@@ -256,12 +256,29 @@ public final class EmojiPalettesView extends LinearLayout
         }
     }
 
+    private void addBackTab(LinearLayout host) {
+        final ImageView backView = new ImageView(getContext());
+        mColors.setBackground(backView, ColorType.STRIP_BACKGROUND);
+        mColors.setColor(backView, ColorType.EMOJI_CATEGORY);
+        backView.setScaleType(ImageView.ScaleType.CENTER);
+        backView.setImageResource(R.drawable.ic_lucide_arrow_left);
+        backView.setContentDescription(getContext().getString(R.string.label_go_key));
+        host.addView(backView);
+        backView.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+        backView.setOnClickListener(v -> {
+            AudioAndHapticFeedbackManager.getInstance().performHapticAndAudioFeedback(KeyCode.ALPHA, this, HapticEvent.KEY_PRESS);
+            mKeyboardActionListener.onCodeInput(KeyCode.ALPHA, NOT_A_COORDINATE, NOT_A_COORDINATE, false);
+        });
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     public void initialize() { // needs to be delayed for access to EmojiTabStrip, which is not a child of this view
         if (initialized) return;
         mEmojiCategory.initialize();
         mTabStrip = (LinearLayout) KeyboardSwitcher.getInstance().getEmojiTabStrip();
-        if (Settings.getValues().isSecondaryStripVisible()) {
+        if (mTabStrip != null && Settings.getValues().isSecondaryStripVisible()) {
+            mTabStrip.removeAllViews();
+            addBackTab(mTabStrip);
             for (EmojiCategory.CategoryProperties properties : mEmojiCategory.getShownCategories()) {
                 addTab(mTabStrip, properties.getCategory());
             }

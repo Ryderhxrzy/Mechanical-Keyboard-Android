@@ -118,7 +118,13 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     private val toolbarContainer: View = findViewById(R.id.toolbar_container)
     private val pinnedKeys: ViewGroup = findViewById(R.id.pinned_keys)
     private val suggestionsStrip: ViewGroup = findViewById(R.id.suggestions_strip)
+    private val stripWrapper: LinearLayout = findViewById(R.id.suggestions_strip_wrapper)
     private val toolbarExpandKey = findViewById<ImageButton>(R.id.suggestions_strip_toolbar_key)
+    private val mechAudioBar: LinearLayout
+    private val mechVolumeButton: ImageButton
+    private val mechSwitchChip: TextView
+    private val mechVolumeSeek: android.widget.SeekBar
+    private val mechVolumeLabel: TextView
     private val incognitoIcon = KeyboardIconsSet.instance.getNewDrawable(ToolbarKey.INCOGNITO.name, context)
     private val toolbarArrowIcon = KeyboardIconsSet.instance.getNewDrawable(KeyboardIconsSet.NAME_TOOLBAR_KEY, context)
     private val defaultToolbarBackground: Drawable = toolbarExpandKey.background
@@ -176,6 +182,116 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
             toolbar.minimumWidth = toolbarContainer.width
         }
 
+        // On-keyboard Mechanical Sound & Volume Bar (no app opening needed)
+        val mechSound = helium314.keyboard.latin.utils.MechanicalSoundManager.getInstance().apply { init(context) }
+        val dp4 = 4.dpToPx(resources)
+        val dp8 = 8.dpToPx(resources)
+        val textColor = colors.get(ColorType.KEY_TEXT)
+        val accentColor = colors.get(ColorType.ACTION_KEY_BACKGROUND)
+
+        mechSwitchChip = TextView(context).apply {
+            val sw = mechSound.getSelectedSwitchType()
+            text = sw.id.uppercase()
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+            setTypeface(typeface, android.graphics.Typeface.BOLD)
+            setTextColor(Color.WHITE)
+            setPadding(dp8, dp4, dp8, dp4)
+            background = GradientDrawable().apply {
+                cornerRadius = 12.dpToPx(resources).toFloat()
+                setColor(accentColor)
+            }
+            setOnClickListener {
+                val entries = helium314.keyboard.latin.utils.MechanicalSoundManager.SwitchType.entries
+                val nextIdx = (entries.indexOf(mechSound.getSelectedSwitchType()) + 1) % entries.size
+                val nextSw = entries[nextIdx]
+                mechSound.setSwitchType(nextSw)
+                text = nextSw.id.uppercase()
+                mechSound.playSwitchSound(Constants.CODE_SPACE)
+            }
+        }
+
+        mechVolumeLabel = TextView(context).apply {
+            val volPct = if (!mechSound.isReadyAndEnabled()) 0 else (mechSound.getVolume() * 100).toInt()
+            text = if (volPct == 0) "MUTE" else "$volPct%"
+            setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f)
+            setTypeface(android.graphics.Typeface.MONOSPACE, android.graphics.Typeface.BOLD)
+            setTextColor(textColor)
+            setPadding(dp4, 0, dp8, 0)
+        }
+
+        mechVolumeSeek = android.widget.SeekBar(context).apply {
+            max = 100
+            progress = if (!mechSound.isReadyAndEnabled()) 0 else (mechSound.getVolume() * 100).toInt()
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
+                    if (!fromUser) return
+                    if (progress <= 2) {
+                        mechSound.setSoundEnabled(false)
+                        mechVolumeLabel.text = "MUTE"
+                    } else {
+                        mechSound.setSoundEnabled(true)
+                        mechSound.setVolume(progress / 100f)
+                        mechVolumeLabel.text = "$progress%"
+                    }
+                }
+                override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
+                override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                    if ((seekBar?.progress ?: 0) > 2) {
+                        mechSound.playSwitchSound(Constants.CODE_SPACE)
+                    }
+                }
+            })
+        }
+
+        val mechCloseButton = ImageButton(context, null, R.attr.suggestionWordStyle).apply {
+            layoutParams = LinearLayout.LayoutParams(toolbarHeight, toolbarHeight)
+            scaleType = android.widget.ImageView.ScaleType.CENTER
+            setImageResource(R.drawable.ic_lucide_x)
+            contentDescription = "Close Audio Controls"
+            colors.setColor(this, ColorType.TOOL_BAR_KEY)
+            colors.setBackground(this, ColorType.STRIP_BACKGROUND)
+            setOnClickListener { hideMechAudioBar() }
+        }
+
+        mechAudioBar = LinearLayout(context).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 1f)
+            setPadding(dp8, 0, dp4, 0)
+            isVisible = false
+            addView(mechSwitchChip)
+            addView(mechVolumeSeek)
+            addView(mechVolumeLabel)
+            addView(mechCloseButton)
+        }
+        stripWrapper.addView(mechAudioBar, stripWrapper.indexOfChild(suggestionsStrip))
+
+        mechVolumeButton = ImageButton(context, null, R.attr.suggestionWordStyle).apply {
+            layoutParams = LinearLayout.LayoutParams(toolbarHeight, toolbarHeight)
+            scaleType = android.widget.ImageView.ScaleType.CENTER
+            setImageResource(R.drawable.ic_lucide_volume_2)
+            contentDescription = "Mechanical Sound Volume"
+            colors.setColor(this, ColorType.TOOL_BAR_KEY)
+            colors.setBackground(this, ColorType.STRIP_BACKGROUND)
+            setOnClickListener {
+                val showAudioBar = !mechAudioBar.isVisible
+                if (showAudioBar) {
+                    toolbarContainer.isVisible = false
+                    suggestionsStrip.isVisible = false
+                    pinnedKeys.isVisible = false
+                    val volPct = if (!mechSound.isReadyAndEnabled()) 0 else (mechSound.getVolume() * 100).toInt()
+                    mechVolumeSeek.progress = volPct
+                    mechVolumeLabel.text = if (volPct == 0) "MUTE" else "$volPct%"
+                    mechSwitchChip.text = mechSound.getSelectedSwitchType().id.uppercase()
+                    mechAudioBar.isVisible = true
+                } else {
+                    hideMechAudioBar()
+                }
+            }
+        }
+        stripWrapper.addView(mechVolumeButton)
+
         updateKeys()
     }
 
@@ -227,10 +343,21 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         suggestionsStrip.layoutDirection = newLayoutDirection
     }
 
+    fun hideMechAudioBar() {
+        if (!mechAudioBar.isVisible) return
+        mechAudioBar.isVisible = false
+        if (toolbarContainer.visibility != VISIBLE) {
+            suggestionsStrip.isVisible = true
+            pinnedKeys.isVisible = true
+        }
+    }
+
     fun setToolbarVisibility(toolbarVisible: Boolean) {
+        hideMechAudioBar()
         pinnedKeys.isVisible = !toolbarVisible
         suggestionsStrip.isVisible = !toolbarVisible
         toolbarContainer.isVisible = toolbarVisible
+        mechVolumeButton.isVisible = !toolbarVisible
 
         if (DEBUG_SUGGESTIONS) {
             for (view in debugInfoViews) {
@@ -242,6 +369,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     fun setSuggestions(suggestions: SuggestedWords, isRtlLanguage: Boolean) {
+        hideMechAudioBar()
         clear()
         setRtl(isRtlLanguage)
         suggestedWords = suggestions
@@ -318,6 +446,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     override fun onInterceptTouchEvent(motionEvent: MotionEvent): Boolean {
+        if (mechAudioBar.isVisible) return false
         // Detecting sliding up finger to show MoreSuggestionsView.
         return moreSuggestionsView.shouldInterceptTouchEvent(motionEvent)
     }
@@ -329,6 +458,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     }
 
     override fun onClick(view: View) {
+        hideMechAudioBar()
         val tag = view.tag
         if (tag is ToolbarKey) {
             onClickToolbarKey(view) { listener.onCodeInput(it, Constants.SUGGESTION_STRIP_COORDINATE, Constants.SUGGESTION_STRIP_COORDINATE, false) }
@@ -483,7 +613,7 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
     private fun clear() {
         suggestionsStrip.removeAllViews()
         if (DEBUG_SUGGESTIONS) removeAllDebugInfoViews()
-        if (!toolbarContainer.isVisible)
+        if (!toolbarContainer.isVisible && !mechAudioBar.isVisible)
             suggestionsStrip.isVisible = true
         dismissMoreSuggestionsPanel()
         for (word in wordViews) {
@@ -520,7 +650,12 @@ class SuggestionStripView(context: Context, attrs: AttributeSet?, defStyle: Int)
         }
 
         toolbarExpandKey.setOnClickListener(if (!toolbarIsExpandable) null else this)
-        pinnedKeys.visibility = suggestionsStrip.visibility
+        if (mechAudioBar.isVisible) {
+            suggestionsStrip.isVisible = false
+            pinnedKeys.isVisible = false
+        } else {
+            pinnedKeys.visibility = suggestionsStrip.visibility
+        }
         isExternalSuggestionVisible = false
     }
 

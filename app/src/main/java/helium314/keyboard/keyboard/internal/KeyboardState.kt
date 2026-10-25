@@ -99,6 +99,9 @@ class KeyboardState(private val switchActions: SwitchActions) {
         shiftKeyState = ModifierKeyState.RELEASED
         symbolKeyState = ModifierKeyState.RELEASED
         if (savedKeyboardState.isValid) {
+            if (savedKeyboardState.shiftMode == ShiftMode.LOCKED && autoCapsFlags != TextUtils.CAP_MODE_CHARACTERS) {
+                savedKeyboardState.shiftMode = ShiftMode.UNSHIFT
+            }
             onRestoreKeyboardState(autoCapsFlags, recapitalizeMode)
             savedKeyboardState.isValid = false
         } else {
@@ -298,7 +301,11 @@ class KeyboardState(private val switchActions: SwitchActions) {
         if (DEBUG_EVENT) {
             Log.d(TAG, "onResetKeyboardStateToAlphabet: ${stateToString(autoCapsFlags, recapitalizeMode)}")
         }
+        if (shiftMode == ShiftMode.LOCKED) {
+            setShifted(ShiftMode.UNSHIFT)
+        }
         resetToAlpha(autoCapsFlags, recapitalizeMode)
+        updateAlphabetShiftState(autoCapsFlags, recapitalizeMode)
     }
 
     private fun updateAlphabetShiftState(autoCapsFlags: Int, recapitalizeMode: RecapitalizeMode?) {

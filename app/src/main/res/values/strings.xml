@@ -9,11 +9,11 @@
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
     tools:ignore="MissingTranslation">
     <!-- Name of Android spell checker service. The app name should not be translated. -->
-    <string name="spell_checker_service_name">HeliBoard Spell Checker</string>
+    <string name="spell_checker_service_name">MechBoard Spell Checker</string>
     <!-- Title for IME settings screen. The app name should not be translated. -->
-    <string name="ime_settings">HeliBoard Settings</string>
+    <string name="ime_settings">MechBoard Settings</string>
     <!-- Title for the spell checking service settings screen. The app name should not be translated. -->
-    <string name="android_spell_checker_settings">HeliBoard Spell Checker Settings</string>
+    <string name="android_spell_checker_settings">MechBoard Spell Checker Settings</string>
     <!-- Option to provide vibrate/haptic feedback on keypress -->
     <string name="vibrate_on_keypress">Vibrate on keypress</string>
     <!-- Option to provide vibrate/haptic feedback on keypress even in do not disturb mode -->
@@ -1322,4 +1322,23 @@ New dictionary:
     <string name="gesture_data_swipe_o_scope">Tool for visualizing gesture data: &lt;a href=%s&gt;Swipe-O-Scope&lt;/a&gt;</string>
 
     <!-- new strings should go above the section for gesture data gathering -->
+
+    <!-- Mechanical Keyboard Onboarding enhancements -->
+    <string name="setup_tagline">Tactile typing with custom mechanical keyboard themes</string>
+    <string name="setup_feature_themes_title">Mechanical Themes</string>
+    <string name="setup_feature_themes_desc">Custom switch styles, keycap aesthetics, and tactile feel</string>
+    <string name="setup_feature_privacy_title">100% Offline &amp; Private</string>
+    <string name="setup_feature_privacy_desc">No internet permission. Your keystrokes never leave your phone</string>
+    <string name="setup_feature_performance_title">Ultra Responsive</string>
+    <string name="setup_feature_performance_desc">Fast native typing engine with zero lag</string>
+    <string name="setup_test_keyboard_hint">Tap here to test your new keyboard...</string>
+    <!-- Mechanical Keyboard Themes -->
+    <string name="theme_name_mech_retro">Retro Classic (Beige)</string>
+    <string name="theme_name_mech_cyberpunk">Cyberpunk Neon</string>
+    <string name="theme_name_mech_matcha">Matcha Green</string>
+    <string name="theme_name_mech_stealth">Carbon Stealth</string>
+    <string name="theme_name_mech_amber">Cyber Amber (MT3)</string>
+    <string name="theme_name_mech_olivia">GMK Olivia</string>
+    <string name="theme_name_mech_dolch">GMK Dolch</string>
+    <string name="theme_name_mech_custom">Custom Mech Palette</string>
 </resources>
