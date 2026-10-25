@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "helium314.keyboard"
         minSdk = 21
-        targetSdk = 37
+        targetSdk = 36
         versionCode = 4300
         versionName = "4.3-beta1"
         ndk {
@@ -66,7 +66,7 @@ android {
             }
             variant.outputs.forEach { output ->
                 if (output is com.android.build.api.variant.impl.VariantOutputImpl) {
-                    output.outputFileName = "HeliBoard_${defaultConfig.versionName}-${variant.buildType}.apk"
+                    output.outputFileName = "MechBoard_${defaultConfig.versionName}-${variant.buildType}.apk"
                 }
             }
         }
