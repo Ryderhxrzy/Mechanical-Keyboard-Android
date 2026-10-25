@@ -1,141 +1,91 @@
-# HeliBoard
-HeliBoard is a privacy-conscious and customizable open-source keyboard, based on AOSP / OpenBoard.
-Does not use internet permission, and thus is 100% offline.
+# MechBoard
 
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on F-Droid" height="80">](https://f-droid.org/packages/helium314.keyboard/)
-[<img src="https://user-images.githubusercontent.com/663460/26973090-f8fdc986-4d14-11e7-995a-e7c5e79ed925.png" alt="Get APK from GitHub" height="80">](https://github.com/HeliBorg/HeliBoard/releases/latest)
-[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" alt="Get it on IzzyOnDroid" height="80">](https://apt.izzysoft.de/fdroid/index/apk/helium314.keyboard)
+> A privacy-focused, open-source mechanical keyboard for Android with customizable colors, realistic switch sounds, custom keypress sound uploads, and personalized themes. Built on HeliBoard.
 
-## Table of Contents
+**MechBoard** brings the tactile aesthetics and acoustic satisfaction of high-end custom mechanical keyboards to Android. Featuring sculpted MT3/SA spherical keycaps, physical switch acoustics, customizable palettes, dynamic RGB underglow, and a dedicated Mech Studio workbench—all while remaining **100% offline** and private.
 
-- [Features](#features)
-- [Contributing](#contributing-)
-   * [Reporting Issues](#reporting-issues)
-   * [Translations](#translations)
-   * [To Community](#to-community)
-   * [Code Contribution](CONTRIBUTING.md)
-- [Links](#links)
-- [License](#license)
-- [Credits](#credits)
-  * [Funding](#funding)
+---
 
-# Features
-<ul>
-  <li>Add dictionaries for suggestions and spell check</li>
-  <ul>
-    <li>build your own, or get them  <a href="https://codeberg.org/Helium314/aosp-dictionaries#dictionaries">here</a> (quality may vary)</li>
-    <li>additional dictionaries for emojis or scientific symbols can be used to provide suggestions (similar to "emoji search")</li>
-    <li>note that for Korean layouts, suggestions only work using <a href="https://github.com/openboard-team/openboard/commit/83fca9533c03b9fecc009fc632577226bbd6301f">this dictionary</a>, the tools in the dictionary repository are not able to create working dictionaries</li>
-  </ul>
-  <li>Customize keyboard themes (style, colors and background image)</li>
-  <li>Emoji search (inline and separate, requires <a href="https://codeberg.org/Helium314/aosp-dictionaries">emoji dictionary</a>)</li>
-  <ul>
-    <li>can follow the system's day/night setting on Android 10+ (and on some versions of Android 9)</li>
-    <li>can follow dynamic colors for Android 12+</li>
-  </ul>
-  <li>Customize keyboard <a href="https://github.com/HeliBorg/HeliBoard/blob/main/layouts.md">layouts</a> (only available when disabling <i>use system languages</i>)</li>
-  <li>Customize special layouts, like symbols, number,  or functional key layout</li>
-  <li>Multilingual typing</li>
-  <li>Glide typing (<i>only with closed source library</i> ☹️)</li>
-  <ul>
-    <li>library not included in the app, as there is no compatible open source library available</li>
-    <li>can be extracted from GApps packages ("<i>swypelibs</i>"), or downloaded <a href="https://github.com/erkserkserks/openboard/tree/46fdf2b550035ca69299ce312fa158e7ade36967/app/src/main/jniLibs">here</a> (click on the file and then "raw" or the tiny download button)</li>
-  </ul>
-  <li>Clipboard history</li>
-  <li>One-handed mode</li>
-  <li>Split keyboard</li>
-  <li>Number pad</li>
-  <li>Backup and restore your settings and learned word / history data</li>
-</ul>
+## 🔒 100% Offline & Privacy by Design
 
-For [FAQ](https://github.com/HeliBorg/HeliBoard/wiki/FAQ), [hidden features](https://github.com/HeliBorg/HeliBoard/wiki/9.-Hidden-features) and more information about the app and features, please visit the [wiki](https://github.com/HeliBorg/HeliBoard/wiki)
+- **Zero Network Permissions**: MechBoard does not request or use `android.permission.INTERNET`.
+- **Completely Self-Contained**: All switch audio assets, keycap physics rendering, dictionaries, and theme configurations run strictly locally on your device.
+- **Zero Telemetry**: No tracking, no analytics, no keystroke logging, and no external server connections whatsoever. Your typing data never leaves your phone.
 
-# Contributing ❤
+---
 
-## Reporting Issues
+## ✨ Features
 
-Whether you encountered a bug, or want to see a new feature in HeliBoard, you can contribute to the project by opening a new issue [here](https://github.com/HeliBorg/HeliBoard/issues). Your help is always welcome!
+### ⌨️ Authentic 3D Mechanical Keycaps (MT3 / SA Profile)
+- **Deep Spherical Scooped Dish**: Authentic MT3/Susuwatari dish geometry with concave radial scoops and specular rim lighting.
+- **Tapered 3D Bevel Skirts**: 4-sided trapezoidal keycap walls with realistic shadow depth and diagonal corner chamfers.
+- **Tactile Homing Bars**: Integrated tactile homing bars on `F` and `J` keys.
+- **Physical Key Plunge**: Real-time downward plunge animation upon keypress.
 
-Before opening a new issue, be sure to check the following:
- - **Does the issue already exist?** Make sure a similar issue has not been reported by browsing [existing issues](https://github.com/HeliBorg/HeliBoard/issues?q=). Please search open and closed issues. In case of feature requests you could also check the [FAQ](https://github.com/HeliBorg/HeliBoard/wiki/FAQ) and [hidden features](https://github.com/HeliBorg/HeliBoard/wiki/9.-Hidden-features).
- - **Is the issue still relevant?** Make sure your issue is not already fixed in the latest version of HeliBoard.
- - **Is it a single topic?** If you want to suggest multiple things, open multiple issues.
- - **Did you use the issue template?** It is important to make life of our kind contributors easier by avoiding issues that miss key information to their resolution.
- - **Is it written by a human?** Do not use LLMs or similar to generate issues. Having LLMs help with translation or similar is acceptable, but must be disclosed. See also [AI_USAGE.md](AI_USAGE.md)
-Note that issues that that ignore part of the issue template will likely get treated with very low priority, as often they are needlessly hard to read or understand (e.g. huge screenshots, not providing a proper description, or addressing multiple topics). Blatant violation of the guidelines may result in the issue getting closed.
+### 🔊 Realistic Switch Acoustics
+- **6 Physical Switch Sound Profiles**:
+  - **Kailh Box Jade** – Loud, crisp, high-pitch tactile clickbar snap.
+  - **Cherry MX Blue** – Classic clicky mechanical switch with sharp acoustic release.
+  - **Gateron Brown** – Gentle tactile bump with warm acoustic clack.
+  - **Gateron Red** – Smooth linear keypress with deep bottom-out thud.
+  - **Gateron Black** – Heavy linear switch with muted acoustic travel.
+  - **Gateron Silent** – Dampened silicone stem, whisper-quiet typing.
+- **On-Keyboard Quick Volume Control**: Adjust switch click volume directly from the keyboard top bar without opening the app.
+- **Silent Mode Audio Override**: Option to keep switch acoustics playing through media channel even when your phone is set to silent or vibrate.
 
-If you're interested, you can read the following useful text about effective bug reporting (a bit longer read): https://www.chiark.greenend.org.uk/~sgtatham/bugs.html
+### 🎨 Keycap Customizer & RGB Underglow
+- **Part-by-Part Color Customizer**: Easily customize individual keycap components in 1 tap:
+  - Switch Plate / Case Chassis
+  - Alpha Keycaps (QWERTY letters)
+  - Modifier Keycaps (Shift, Space, Symbols)
+  - Accent Artisan Keys (Enter, Esc, Arrows)
+  - Legend Text & Glyphs
+- **RGB Underglow & Rim Lighting**: Dynamic rainbow spectrum glow pulsing beneath the switch plate.
+- **Adaptive Light & Dark Mode**:
+  - Automatically adapts to system Day/Night mode.
+  - Manual override options: *Follow System (Auto)*, *Always Dark*, or *Always Light*.
+  - Curated mechanical colorways: **Cyber Amber (MT3)**, **GMK Olivia**, **Carbon Stealth**, **GMK Dolch**, **Matcha Green**, **Cyberpunk Neon**, and **Retro Classic**.
 
-## Translations
-Translations can be added using [Weblate](https://translate.codeberg.org/projects/heliboard/). You will need an account to update translations and add languages. Add the language you want to translate to in Languages -> Manage translated languages in the top menu bar.
-Updating translations in a PR will not be accepted, as it may cause conflicts with Weblate translations.
+### 📱 Mech Studio Hub
+- **Real-Time Live Mobile Preview**: An interactive 4-row Android mobile layout preview that reflects all theme, color, switch sound, height, and RGB adjustments instantly.
+- **Interactive Typing Line**: Tap preview keys to test switch acoustics, feel key plunge, and test text input live.
+- **Size & Ergonomics**:
+  - Fine-grained Keyboard Height slider (70% to 135%) with quick presets (*Compact*, *Normal*, *Tall*).
+  - Key Spacing (Gaps) slider for customizable keycap density.
+  - Tactile haptic bump vibration matching switch actuation points.
 
-Some notes on translations
-* when translating metadata, translating the changelogs is rather useless. It's available as it was requested by translators.
-* the `hidden_features_message` is horrible to translate with Weblate, and serves little benefit as it's just a copy of what's already in the wiki: https://github.com/HeliBorg/HeliBoard/wiki/9.-Hidden-features. It's been made available in the app on user request/contribution.
+### 🚀 Smart Typing & Keyboard Flow
+- **Smart Caps Lock Reset**: When typing in all-caps, sending a chat message (via Enter or in-app send button) automatically resets Caps Lock back to standard sentence capitalization—matching Gboard behavior.
+- **Emoji Keyboard with Back Button**: Dedicated top-strip `← / ABC` button for returning to the text keyboard in a single tap.
+- **Optimized Emoji Spacing**: Generous key spacing on emoji grids to prevent overlapping icons.
+- **Clean Vector UI**: Exclusively utilizes modern Lucide vector icons across the interface.
 
-## To Community
-There is the [discussions on GitHub](https://github.com/HeliBorg/HeliBoard/discussions), or if you prefer a more open network there is [Lemmy](https://lemmy.world/c/Heliboard).
-You can share your themes, layouts and dictionaries with other people:
-* Themes can be saved and loaded using the menu on top-right in the _adjust colors_ screen
-  * you can share custom colors in a separate [discussion section](https://github.com/HeliBorg/HeliBoard/discussions/categories/custom-colors)
-  * there are theme collections available at [Star-Trowa/heliboard-themes](https://github.com/Star-Trowa/heliboard-themes) and [PickleHik3/droid-tings](https://github.com/PickleHik3/droid-tings)
-* Custom keyboard layouts are text files whose content you can edit, copy and share
-  * this applies to main keyboard layouts and to special layouts adjustable in advanced settings
-  * see [layouts.md](layouts.md) for details
-  * you can share custom layouts in a separate [discussion section](https://github.com/HeliBorg/HeliBoard/discussions/categories/custom-layout)
-  * [Roccobot's Layout Maker](https://roccobot.github.io/HeliBoard-RLM/) is a browser-based editor for json layout files
-* Creating dictionaries is a little more work
-  * first you will need a wordlist in the format from [here](https://codeberg.org/Helium314/aosp-dictionaries/src/branch/main/wordlists/sample.combined) and in the repository readme
-    * you can load the wordlist dictionary directly in HeliBoard like you would load a dictionary, but other AOSP keyboard forks will likely need the .dict file
-  * then you need to compile the dictionary using [external tools](https://github.com/remi0s/aosp-dictionary-tools)
-    * when you want to add the dictionary to the [repository](https://codeberg.org/Helium314/aosp-dictionaries/), no need to compile to a .dict file
-  * the resulting file (and ideally the wordlist too) can be shared with other users
-  * note that there will not be any further dictionaries added to this app, but you can add dictionaries to the [dictionaries repository](https://codeberg.org/Helium314/aosp-dictionaries)
+---
 
-## Code Contribution
-See [Contribution Guidelines](CONTRIBUTING.md)
+## 🛠️ Building & Installation
 
-# Links
-* Info
-  * [Wiki](https://github.com/HeliBorg/HeliBoard/wiki), including FAQ, help on customizing layouts, and gesture data gathering
-  * [Layout documentation](layouts.md) (more technical info regarding layout customization)
-  * [For creating custom dictionaries](https://codeberg.org/Helium314/aosp-dictionaries#wordlist-information) (see also top of the linked readme)
-* Community
-  * [Lemmy](https://lemmy.world/c/Heliboard)
-  * [Reddit](https://www.reddit.com/r/HeliBoard)
-  * GitHub [discussions](https://github.com/HeliBorg/HeliBoard/discussions)
-* Other
-  * [Translations](https://translate.codeberg.org/projects/heliboard/)
-  * [Dictionaries](https://codeberg.org/Helium314/aosp-dictionaries)
-  * [k3lp](https://codeberg.org/k3lp/k3lp) is a WIP library for keyboard layout parsing that will be implemented in HeliBoard when ready (created by [FlorisBoard](https://github.com/florisboard/florisboard/) maintainers)
-  * [swipe-o-scope](https://codeberg.org/eclexic/swipe-o-scope) for visualizing gesture data as created when using gesture data gathering
+### Requirements
+- Android SDK 35
+- JDK 17 or higher
+- Android Studio Ladybug / Gradle 8.11+
 
-# License
+### Build APK
+```bash
+# Clone the repository
+git clone https://github.com/Ryderhxrzy/Mechanical-Keyboard-Android.git
+cd Mechanical-Keyboard-Android
 
-HeliBoard (as a fork of OpenBoard) is licensed under GNU General Public License v3.0.
+# Build Debug APK
+./gradlew assembleDebug
 
- > Permissions of this strong copyleft license are conditioned on making available complete source code of licensed works and modifications, which include larger works using a licensed work, under the same license. Copyright and license notices must be preserved. Contributors provide an express grant of patent rights.
+# Output APK location:
+# app/build/outputs/apk/debug/MechBoard_<version>-debug.apk
+```
 
-See repo's [LICENSE](/LICENSE) file.
+---
 
-Since the app is based on Apache 2.0 licensed AOSP Keyboard, an [Apache 2.0](LICENSE-Apache-2.0) license file is provided.
-The icon is licensed under [Creative Commons BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). A [license file](LICENSE-CC-BY-SA-4.0) is also included.
+## 📄 License & Credits
 
-# Credits
-- Icon by [Fabian OvrWrt](https://github.com/FabianOvrWrt) with contributions from [The Eclectic Dyslexic](https://github.com/the-eclectic-dyslexic)
-- [OpenBoard](https://github.com/openboard-team/openboard)
-- [AOSP Keyboard](https://android.googlesource.com/platform/packages/inputmethods/LatinIME/)
-- [LineageOS](https://review.lineageos.org/admin/repos/LineageOS/android_packages_inputmethods_LatinIME)
-- [Simple Keyboard](https://github.com/rkkr/simple-keyboard)
-- [Indic Keyboard](https://gitlab.com/indicproject/indic-keyboard)
-- [FlorisBoard](https://github.com/florisboard/florisboard/)
-- Our [contributors](https://github.com/HeliBorg/HeliBoard/graphs/contributors)
-
-## Funding
-
-This project is funded through [NGI Mobifree Fund](https://nlnet.nl/mobifree), a fund established by [NLnet](https://nlnet.nl) with financial support from the European Commission's [Next Generation Internet](https://ngi.eu) program. Learn more at the [NLnet project page](https://nlnet.nl/project/GestureTyping).
-
-[<img src="https://nlnet.nl/logo/banner.png" alt="NLnet foundation logo" width="20%" />](https://nlnet.nl)
-
-Further the project benefits from donations provided by many users (thank you all!).
+- **MechBoard** is free and open-source software licensed under the [GNU General Public License v3.0](LICENSE).
+- Based on [HeliBoard](https://github.com/HeliBorg/HeliBoard) / [OpenBoard](https://github.com/openboard-team/openboard) / [AOSP LatinIME](https://android.googlesource.com/platform/packages/inputmethods/LatinIME/).
+- Icons powered by [Lucide Icons](https://lucide.dev/) (ISC License).
